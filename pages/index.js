@@ -21,10 +21,7 @@ const Home = () => {
       <div className={HomeStyles.container}>
         <main className={HomeStyles.main}>
           <div className="wrapper m-auto max-w-8xl">
-            {/* Editor Component */}
             {showEditor && <Editor />}
-
-            {/* Note list component */}
             <NotesList />
           </div>
         </main>

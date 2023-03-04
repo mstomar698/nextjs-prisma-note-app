@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
 
-import {  PencilAltIcon, TrashIcon, ExternalLinkIcon } from "@heroicons/react/solid";
+import {
+  PencilAltIcon,
+  TrashIcon,
+  ExternalLinkIcon,
+} from '@heroicons/react/solid';
 
-import { useNote, useDispatchNote, useNotes, useDispatchNotes } from "../modules/AppContext";
+import {
+  useNote,
+  useDispatchNote,
+  useNotes,
+  useDispatchNotes,
+} from '../modules/AppContext';
 
-
-const NotesList = ({ showEditor }) => {
+const NotesList = () => {
   const notes = useNotes();
   const setNotes = useDispatchNotes();
 
@@ -13,13 +20,13 @@ const NotesList = ({ showEditor }) => {
   const setCurrentNote = useDispatchNote();
 
   const editNote = (note) => {
-    note.action = "edit";
+    note.action = 'edit';
     setCurrentNote(note);
   };
 
   const deleteNote = (note) => {
-    let confirmDelete = confirm("Do you really want to delete this note?");
-    confirmDelete ? setNotes({ note, type: "remove" }) : null;
+    let confirmDelete = confirm('Do you really want to delete this note?');
+    confirmDelete ? setNotes({ note, type: 'remove' }) : null;
   };
 
   return (
@@ -50,7 +57,10 @@ const NotesList = ({ showEditor }) => {
                       </button>
                     </li>
                     <li className="option">
-                      <button onClick={() => deleteNote(note)} className="cta cta-w-icon">
+                      <button
+                        onClick={() => deleteNote(note)}
+                        className="cta cta-w-icon"
+                      >
                         <TrashIcon className="icon" />
                         <span className="">Delete</span>
                       </button>

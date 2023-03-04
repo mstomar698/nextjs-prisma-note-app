@@ -24,7 +24,6 @@ const User = ({ params }) => {
       <div className={HomeStyles.container}>
         <main className={HomeStyles.main}>
           <div className="wrapper m-auto max-w-8xl">
-            {/* Note list component */}
             <NotesList />
           </div>
         </main>

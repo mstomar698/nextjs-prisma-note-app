@@ -46,7 +46,7 @@ and the name of the ship was the billy old tea`
     field.style.height = `${height}px`;
   };
 
-  const saveNote = () => {
+  const saveNote = async () => {
     if (title && body) {
       let id = noteID || RandomID(title.slice(0, 5), 5);
 
@@ -58,10 +58,30 @@ and the name of the ship was the billy old tea`
 
       try {
         if (noteAction == 'edit') {
-          setNotes({ note, type: 'edit' });
-          console.log({ note, noteAction, noteID, notes });
+          // add note id to note data
+          note.id = noteID;
+          // send request to edit note
+          let res = await fetch('/api/note', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(note),
+          });
+          // update note
+          const updatedNote = await res.json();
+          console.log('Update successful', { updatedNote });
+          // edit in notes list
+          setNotes({ note: updatedNote, type: 'edit' });
         } else {
-          setNotes({ note, type: 'add' });
+          let res = await fetch('/api/note', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(note),
+          });
+
+          const newNote = await res.json();
+          console.log('Create successful', { newNote });
+          // add to notes list (global context state)
+          setNotes({ note: newNote, type: 'add' });
         }
 
         setIsSaved(true);
@@ -93,45 +113,92 @@ and the name of the ship was the billy old tea`
   }, [currentNote]);
 
   return (
-    <div className={'editor'}>
-      <div className={'wrapper'}>
-        <div className="editing-area">
-          <div className="title">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              className={'form-input'}
-              placeholder="Title"
-            />
+    <>
+      <div className={'editor'}>
+        <div className={'wrapper'}>
+          <div className="editing-area">
+            <div className="title">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                type="text"
+                className={'form-input'}
+                placeholder="Title"
+              />
+            </div>
+            <div className="body">
+              <textarea
+                value={body}
+                onChange={(e) => updateField(e)}
+                name="note-body"
+                id="note-body"
+                className="form-textarea"
+                cols="10"
+                rows="2"
+                placeholder="Write something spec ✨"
+              ></textarea>
+            </div>
           </div>
-          <div className="body">
-            <textarea
-              value={body}
-              onChange={(e) => updateField(e)}
-              name="note-body"
-              id="note-body"
-              className="form-textarea"
-              cols="10"
-              rows="2"
-              placeholder="Write something spec ✨"
-            ></textarea>
-          </div>
+          <ul className={'options'}>
+            <li className={'option'}>
+              <button
+                onClick={saveNote}
+                disabled={isSaved}
+                className="cta flex gap-2 items-end"
+              >
+                <CheckCircleIcon className="h-5 w-5 text-blue-500" />
+                <span className="">{isSaved ? 'Saved' : 'Save'}</span>
+              </button>
+            </li>
+          </ul>
         </div>
-        <ul className={'options'}>
-          <li className={'option'}>
-            <button
-              onClick={saveNote}
-              disabled={isSaved}
-              className="cta flex gap-2 items-end"
-            >
-              <CheckCircleIcon className="h-5 w-5 text-blue-500" />
-              <span className="">{isSaved ? 'Saved' : 'Save'}</span>
-            </button>
-          </li>
-        </ul>
       </div>
-    </div>
+      {/** with authenticatioon */}
+      {/**
+    status === 'authenticated' && (
+      <div className={'editor'}>
+        <div className={'wrapper'}>
+          <div className="editing-area">
+            <div className="title">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                type="text"
+                className={'form-input'}
+                placeholder="Title"
+              />
+            </div>
+            <div className="body">
+              <textarea
+                value={body}
+                onChange={(e) => updateField(e)}
+                name="note-body"
+                id="note-body"
+                className="form-textarea"
+                cols="10"
+                rows="2"
+                placeholder="Write something spec ✨"
+              ></textarea>
+            </div>
+          </div>
+          <ul className={'options'}>
+            <li className={'option'}>
+              <button
+                onClick={saveNote}
+                disabled={isSaved}
+                className="cta flex gap-2 items-end"
+              >
+                <CheckCircleIcon className="h-5 w-5 text-blue-500" />
+                <span className="">{isSaved ? 'Saved' : 'Save'}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    )
+    
+    */}
+    </>
   );
 };
 

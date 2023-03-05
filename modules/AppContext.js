@@ -3,6 +3,7 @@ const NoteStateContext = createContext();
 const NotesStateContext = createContext();
 const NoteDispatchContext = createContext();
 const NotesDispatchContext = createContext();
+
 const notesReducer = (state, action) => {
   const { note, type } = action;
   if (type === 'add') return [...state, note];
@@ -13,7 +14,7 @@ const notesReducer = (state, action) => {
     stateUpdate.splice(noteIndex, 1);
     return stateUpdate;
   }
-
+  if (type === 'replace') return note;
   if (type === 'edit') {
     let noteIndex = state.findIndex((x) => x.id === note.id);
     console.log({ state, noteIndex, note });
